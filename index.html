@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
@@ -43,39 +43,39 @@
             background-color: #fff;
         }
         .test-box1 {
-            height: 200px;
+            height: 800px;
             background: #33CCCC;
         }
         .test-box2 {
-            height: 200px;
+            height: 800px;
             background: #3399FF;
         }
         .test-box3 {
-            height: 200px;
+            height: 800px;
             background: #3399CC;
         }
         .test-box4 {
-            height: 200px;
+            height: 800px;
             background: #3366FF;
         }
         .test-box5 {
-            height: 200px;
+            height: 800px;
             background: #3366CC;
         }
         .test-box6 {
-            height: 200px;
+            height: 800px;
             background: #3333FF;
         }
         .test-box7 {
-            height: 200px;
+            height: 800px;
             background: #3333CC;
         }
         .test-box8 {
-            height: 200px;
+            height: 800px;
             background: #3300FF;
         }
         .test-box9 {
-            height: 200px;
+            height: 800px;
             background: #3300CC;
         }
     </style>
@@ -99,103 +99,81 @@
 <div class="test">
     <div>title 1</div>
     <div class="test-box1">test1</div>
-    <div class="test-box1">test1</div>
-    <div class="test-box1">test1</div>
-    <div class="test-box1">test1</div>
 </div>
 <div class="test">
     <div>title 2</div>
-    <div class="test-box2">test2</div>
-    <div class="test-box2">test2</div>
-    <div class="test-box2">test2</div>
-    <div class="test-box2">test2</div>
     <div class="test-box2">test2</div>
 </div>
 <div class="test">
     <div>title 3</div>
     <div class="test-box3">test3</div>
-    <div class="test-box3">test3</div>
-    <div class="test-box3">test3</div>
 </div>
 <div class="test">
     <div>title 4</div>
-    <div class="test-box4">test4</div>
-    <div class="test-box4">test4</div>
     <div class="test-box4">test4</div>
 </div>
 <div class="test">
     <div>title 5</div>
     <div class="test-box5">test5</div>
-    <div class="test-box5">test5</div>
-    <div class="test-box5">test5</div>
 </div>
 <div class="test">
     <div>title 6</div>
-    <div class="test-box6">test6</div>
-    <div class="test-box6">test6</div>
     <div class="test-box6">test6</div>
 </div>
 <div class="test">
     <div>title 7</div>
     <div class="test-box7">test7</div>
-    <div class="test-box7">test7</div>
-    <div class="test-box7">test7</div>
 </div>
 <div class="test">
     <div>title 8</div>
-    <div class="test-box8">test8</div>
-    <div class="test-box8">test8</div>
     <div class="test-box8">test8</div>
 </div>
 <div class="test">
     <div>title 9</div>
     <div class="test-box9">test9</div>
-    <div class="test-box9">test9</div>
-    <div class="test-box9">test9</div>
 </div>
 
-<script type="text/javascript" src="http://7nj1p4.com2.z0.glb.qiniucdn.com/jquery-1.11.1.min.js"></script>
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>">
 <script th:inline="text">
     /*<![CDATA[*/
 
-    (function () {
-//        导航栏固定
-        $(window).scroll(function () {
-            var sTop = $(window).scrollTop();
-            var bannerHeight = $(".banner").height();
-            if (sTop > bannerHeight) {
-                $(".nav-box").addClass("nav-fixed");
-                $(".empty").show();
-            } else {
-                $(".nav-box").removeClass("nav-fixed");
-                $(".empty").hide();
-                activeNav($(".nav-item").eq(0));	//滚动条默认为第一项
+    $.fn.scrollBar = function (){
+    //        导航栏固定
+        var sTop = $(window).scrollTop();
+        var oTop = $(".banner").height();
+//        var oTop = $(this).offset().top;
+        if (sTop > oTop) {
+            $(this).addClass("nav-fixed");
+            $(".empty").show();
+        } else {
+            $(this).removeClass("nav-fixed");
+            $(".empty").hide();
+            activeNav($(".nav-item").eq(0));	//滚动条默认为第一项
+        }
+        var tests = $(".test");
+        for(var i = 0;i < tests.length;i ++){	//循环所有会场
+            var testDocumentTop = tests.eq(i).offset().top;
+            var navboxHeight = $(this).height();
+            var testDocumentAllTop = testDocumentTop - navboxHeight;
+            var testHeight = tests.eq(i).height();
+            var testAllHeight = testDocumentTop + testHeight;
+            if(sTop >= testDocumentAllTop && sTop <= testAllHeight){
+                activeNav($(".nav-item").eq(i));
             }
-            var tests = $(".test");
-            for(var i = 0;i < tests.length;i ++){	//循环所有会场
-                var testDocumentTop = tests.eq(i).offset().top;
-                var navboxHeight = $(".nav-box").height();
-                var testDocumentAllTop = testDocumentTop - navboxHeight;
-                var testHeight = tests.eq(i).height();
-                var testAllHeight = testDocumentTop + testHeight;
-                if(sTop >= testDocumentAllTop && sTop <= testAllHeight){
-                    activeNav($(".nav-item").eq(i));
-                }
-            }
-        });
-//        菜单栏选中
-        $(".nav-items .nav-item").on("click", function () {
+        }
+    //        菜单栏选中
+        $(this).find(".nav-item").on("click", function () {
             scrollItems($(this));
             activeNav($(this));
         });
-//		  滚动方法调用
+    //		  滚动方法调用
         function scrollItems(nav) {
             var itemIdex = nav.index();
             var testTop = $(".test").eq(itemIdex).offset().top;
-            var navHeight = $(".nav-box").height();
+            var navHeight = $(nav).height();
             $(window).scrollTop(testTop - navHeight);
         }
-//		  滚动跳点击方法调用
+    //		  滚动跳点击方法调用
         function activeNav(nav) {
             nav.addClass("active").siblings().removeClass("active");
             var testLeft = nav.position().left;
@@ -204,7 +182,61 @@
         }
 
 
+    };
+    (function(){
+        $(window).scroll(function(){
+            $(".nav-box").scrollBar();
+        });
     })();
+
+
+//    (function () {
+////        导航栏固定
+//        $(window).scroll(function () {
+//            var sTop = $(window).scrollTop();
+//            var bannerHeight = $(".banner").height();
+//            if (sTop > bannerHeight) {
+//                $(".nav-box").addClass("nav-fixed");
+//                $(".empty").show();
+//            } else {
+//                $(".nav-box").removeClass("nav-fixed");
+//                $(".empty").hide();
+//                activeNav($(".nav-item").eq(0));	//滚动条默认为第一项
+//            }
+//            var tests = $(".test");
+//            for(var i = 0;i < tests.length;i ++){	//循环所有会场
+//                var testDocumentTop = tests.eq(i).offset().top;
+//                var navboxHeight = $(".nav-box").height();
+//                var testDocumentAllTop = testDocumentTop - navboxHeight;
+//                var testHeight = tests.eq(i).height();
+//                var testAllHeight = testDocumentTop + testHeight;
+//                if(sTop >= testDocumentAllTop && sTop <= testAllHeight){
+//                    activeNav($(".nav-item").eq(i));
+//                }
+//            }
+//        });
+////        菜单栏选中
+//        $(".nav-items .nav-item").on("click", function () {
+//            scrollItems($(this));
+//            activeNav($(this));
+//        });
+////		  滚动方法调用
+//        function scrollItems(nav) {
+//            var itemIdex = nav.index();
+//            var testTop = $(".test").eq(itemIdex).offset().top;
+//            var navHeight = $(".nav-box").height();
+//            $(window).scrollTop(testTop - navHeight);
+//        }
+////		  滚动跳点击方法调用
+//        function activeNav(nav) {
+//            nav.addClass("active").siblings().removeClass("active");
+//            var testLeft = nav.position().left;
+//            var testWidth = nav.width();
+//            $(".nav-box").scrollLeft(testLeft - testWidth);
+//        }
+//
+//
+//    })();
 
     /*]]>*/
 </script>
